@@ -25,7 +25,7 @@ export default class RichTextExample extends Component {
     constructor(props) {
         super(props);
         const that = this;
-        const theme = Appearance.getColorScheme();
+        const theme = props.theme || Appearance.getColorScheme();
         const contentStyle = that.createContentStyle(theme);
         that.state = {theme: theme, contentStyle};
     }
@@ -60,7 +60,7 @@ export default class RichTextExample extends Component {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                // 'Content-Type': 'multipart/form-data',
+                'Content-Type': 'multipart/form-data',
             },
             body: formData,
         };
@@ -113,9 +113,10 @@ export default class RichTextExample extends Component {
         return contentStyle;
     }
 
-    onHome() {
-        this.props.navigation.push('index');
-    }
+    onHome = () => {
+        let {navigation} = this.props;
+        navigation.push('index');
+    };
 
     render() {
         let that = this;
