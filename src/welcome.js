@@ -12,6 +12,8 @@ export default class Welcome extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {message:""}
     }
 
     multiPost = (files, successCallback, failCallback) => {
@@ -42,10 +44,10 @@ export default class Welcome extends Component {
 
         let fetchOptions = {
             method: 'POST',
-            headers: {
+/*            headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data',
-            },
+            },*/
             body: formData,
         };
 
@@ -61,7 +63,7 @@ export default class Welcome extends Component {
             });
     };
 
-    pickForEdit = () => {
+    pickForUpload = () => {
         let _this = this;
 
         ImagePicker.openPicker({
@@ -75,11 +77,11 @@ export default class Welcome extends Component {
                 _this.multiPost(imageList, function (uploadImages) {
                     Alert.alert('upload success');
                 }, function (error) {
-                    Alert.alert('upload error' + JSON.stringify(error));
+                    _this.setState({message:'upload error' +JSON.stringify(error)});
                 });
             }
         }).catch(e => {
-            Alert.alert('upload catch error' + JSON.stringify(e));
+            _this.setState({message:'upload catch error' +JSON.stringify(e)});
         });
     };
 
@@ -89,10 +91,13 @@ export default class Welcome extends Component {
             <View style={styles.container}>
                 <Text style={styles.welcome}>Examples of successful requests</Text>
                 <Button title={'Successful request'} onPress={() => {
-                    this.pickForEdit();
+                    this.pickForUpload();
                 }}/>
                 <Text style={styles.welcome}>Example of request failure</Text>
                 <Button title={'error request'} onPress={() => navigation.push('rich', {theme: 'light'})}/>
+
+
+                <Text style={styles.message}>{this.state.message}</Text>
             </View>
         );
     }
@@ -108,6 +113,12 @@ const styles = StyleSheet.create({
     },
     welcome: {
         fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    message: {
+        fontSize: 20,
+        color:"red",
         textAlign: 'center',
         margin: 10,
     },

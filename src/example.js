@@ -77,7 +77,7 @@ export default class RichTextExample extends Component {
             });
     };
 
-    pickForEdit = () => {
+    pickForUpload = () => {
         let _this = this;
 
         ImagePicker.openPicker({
@@ -136,7 +136,7 @@ export default class RichTextExample extends Component {
                     <TouchableOpacity style={{marginLeft: 10, padding: 5}} onPress={this.onHome}>
                         <Text>back</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{marginLeft: 10, padding: 5}} onPress={() => that.pickForEdit()}>
+                    <TouchableOpacity style={{marginLeft: 10, padding: 5}} onPress={() => that.pickForUpload()}>
                         <Text>upload</Text>
                     </TouchableOpacity>
                 </View>
@@ -158,7 +158,7 @@ export default class RichTextExample extends Component {
                         iconTint={color}
                         selectedIconTint={'#2095F2'}
                         selectedButtonStyle={{backgroundColor: 'transparent'}}
-                        onPressAddImage={that.pickForEdit}
+                        onPressAddImage={that.pickForUpload}
                         actions={action}
                     />
                 </KeyboardAvoidingView>
