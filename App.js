@@ -134,6 +134,7 @@ export default class RichTextExample extends Component {
     const {contentStyle, theme} = that.state;
     const {backgroundColor, color, placeholderColor} = contentStyle;
     const themeBg = {backgroundColor};
+    let action = ['image'];
     return (
         <SafeAreaView style={styles.container}>
           <View style={{flexDirection: 'row', height: 50, alignItems: 'center',justifyContent: 'center', backgroundColor: '#847b66'}}>
@@ -159,6 +160,7 @@ export default class RichTextExample extends Component {
                 selectedIconTint={'#2095F2'}
                 selectedButtonStyle={{backgroundColor: 'transparent'}}
                 onPressAddImage={that.pickForEdit}
+                actions={action}
             />
           </KeyboardAvoidingView>
 
