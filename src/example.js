@@ -78,6 +78,13 @@ export default class RichTextExample extends Component {
         navigation.push('index');
     };
 
+    async getHTML() {
+        let contentHtml = await this.richText.getContentHtml();
+        const trueContent = contentHtml.toString();
+        alert(trueContent);
+        return trueContent;
+    }
+
     render() {
         let that = this;
         const {contentStyle, theme} = that.state;
@@ -98,6 +105,9 @@ export default class RichTextExample extends Component {
                     </TouchableOpacity>
                     <TouchableOpacity style={{marginLeft: 10, padding: 5}} onPress={() => that.pickForUpload()}>
                         <Text>upload</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{marginLeft: 10, padding: 5}} onPress={() => that.getHTML()}>
+                        <Text>getHtml</Text>
                     </TouchableOpacity>
                 </View>
 
