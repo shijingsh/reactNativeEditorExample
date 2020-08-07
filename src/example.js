@@ -45,7 +45,7 @@ export default class RichTextExample extends Component {
                     return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
                 });
                 if(userImages&&userImages.length>0){
-                    Util.multiPost(url,userImages,[],function (bean) {
+                    Util.multiPost(url,userImages,function (bean) {
                         _this.richText.insertHTML('<p>successCallback:' + JSON.stringify(bean) + '</p>');
                     },function (err) {
                         _this.richText.insertHTML('<p>failCallback:' + JSON.stringify(err) + '</p>');

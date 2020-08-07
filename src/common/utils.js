@@ -15,7 +15,7 @@ let Util = {
             });
     },
 
-    multiPost: (url,files, data, successCallback, failCallback) => {
+    multiPost: (url,files, successCallback, failCallback) => {
         let formData = new FormData();
         for(let i=0;files&&i<files.length;i++){
             let obj = files[i];
@@ -37,22 +37,6 @@ let Util = {
                 formData.append(obj.key,obj);
             }else {
                 formData.append("images"+i,obj);
-            }
-        }
-        //formData.append("images",files);
-        //let file = {uri: files[0].uri, type: 'multipart/form-data', name: 'a.jpg'};
-        //formData.append("images",file);
-        for(let i=0;i<data.length;i++){
-            let obj = data[i];
-            let value = obj.value;
-            if(value !=null && value!=undefined && value!='undefined'){
-                if(Array.isArray(value)){
-                    for (let j = 0; j < value.length; j++) {
-                        formData.append(obj.name,value[j]);
-                    }
-                }else{
-                    formData.append(obj.name,value);
-                }
             }
         }
 

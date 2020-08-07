@@ -30,7 +30,7 @@ export default class Welcome extends Component {
                     return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
                 });
                 if(userImages&&userImages.length>0){
-                    Util.multiPost(url,userImages,[],function (bean) {
+                    Util.multiPost(url,userImages,function (bean) {
                         _this.setState({message:JSON.stringify(bean)});
                     },function (err) {
                         _this.setState({message:JSON.stringify(err)});
