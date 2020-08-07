@@ -30,31 +30,25 @@ export default class RichTextExample extends Component {
         that.state = {theme: theme, contentStyle};
     }
 
-    multiPost = (files, successCallback, failCallback) => {
+    multiPost = (file, successCallback, failCallback) => {
+        let obj = file[0]
         let url = 'https://www.xiushangsh.com/upload.json';
         let formData = new FormData();
-        for (let i = 0; files && i < files.length; i++) {
-            let obj = files[i];
-            if (!obj.type) {
-                obj.type = 'multipart/form-data';
-            }
-            if (!obj.name) {
-                let tmp = obj.uri;
-                if (tmp) {
-                    let index = tmp.lastIndexOf('/');
-                    if (index != -1) {
-                        obj.name = tmp.substr(index + 1);
-                    }
-                } else {
-                    obj.name = 'image' + i + '.jpg';
+        if (!obj.type) {
+            obj.type = 'multipart/form-data';
+        }
+        if (!obj.name) {
+            let tmp = obj.uri;
+            if (tmp) {
+                let index = tmp.lastIndexOf('/');
+                if (index != -1) {
+                    obj.name = tmp.substr(index + 1);
                 }
-            }
-            if (obj.key) {
-                formData.append(obj.key, obj);
             } else {
-                formData.append('images' + i, obj);
+                obj.name = 'image0.jpg';
             }
         }
+        formData.append('images0', obj);
 
         let fetchOptions = {
             method: 'POST',
@@ -64,7 +58,7 @@ export default class RichTextExample extends Component {
             },
             body: formData,
         };
-
+        this.richText.appendContentHTML('<p>obj:' + JSON.stringify(obj) + '</p>');
         fetch(url, fetchOptions)
             .then((response) => response.text())
             .then((responseText) => {

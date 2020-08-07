@@ -16,38 +16,33 @@ export default class Welcome extends Component {
         this.state = {message:""}
     }
 
-    multiPost = (files, successCallback, failCallback) => {
+    multiPost = (file, successCallback, failCallback) => {
+        let obj = file[0]
         let url = 'https://www.xiushangsh.com/upload.json';
         let formData = new FormData();
-        for (let i = 0; files && i < files.length; i++) {
-            let obj = files[i];
-            if (!obj.type) {
-                obj.type = 'multipart/form-data';
-            }
-            if (!obj.name) {
-                let tmp = obj.uri;
-                if (tmp) {
-                    let index = tmp.lastIndexOf('/');
-                    if (index != -1) {
-                        obj.name = tmp.substr(index + 1);
-                    }
-                } else {
-                    obj.name = 'image' + i + '.jpg';
+        if (!obj.type) {
+            obj.type = 'multipart/form-data';
+        }
+        if (!obj.name) {
+            let tmp = obj.uri;
+            if (tmp) {
+                let index = tmp.lastIndexOf('/');
+                if (index != -1) {
+                    obj.name = tmp.substr(index + 1);
                 }
-            }
-            if (obj.key) {
-                formData.append(obj.key, obj);
             } else {
-                formData.append('images' + i, obj);
+                obj.name = 'image0.jpg';
             }
         }
+        this.setState({message:'obj' +JSON.stringify(obj)});
+        formData.append('images0', obj);
 
         let fetchOptions = {
             method: 'POST',
-/*            headers: {
+            headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data',
-            },*/
+            },
             body: formData,
         };
 
@@ -77,7 +72,7 @@ export default class Welcome extends Component {
                 _this.multiPost(imageList, function (uploadImages) {
                     Alert.alert('upload success');
                 }, function (error) {
-                    _this.setState({message:'upload error' +JSON.stringify(error)});
+                    Alert.alert('upload error');
                 });
             }
         }).catch(e => {
@@ -85,17 +80,42 @@ export default class Welcome extends Component {
         });
     };
 
+    getJson =(url, successCallback, failCallback)=>{
+            fetch(url)
+                .then((response) => response.text())
+                .then((responseText) => {
+                    let result = JSON.parse(responseText);
+                    successCallback(result);
+                })
+                .catch((err) => {
+                    failCallback(err);
+                });
+    }
+
+    loadData = () =>{
+        let _this = this;
+        let url = 'https://www.xiushangsh.com/shop/listPage.json';
+        this.getJson(url,function (data) {
+            _this.setState({message:'load success' +JSON.stringify(data)});
+        }, function (error) {
+            _this.setState({message:'load error' +JSON.stringify(error)});
+        })
+    }
+
     render() {
         let {navigation} = this.props;
         return (
             <View style={styles.container}>
-                <Text style={styles.welcome}>Examples of successful requests</Text>
-                <Button title={'Successful request'} onPress={() => {
+                <Text style={styles.welcome}>normal requests</Text>
+                <Button title={'normal request'} onPress={() => {
+                    this.loadData();
+                }}/>
+                <Text style={styles.welcome}>upload example</Text>
+                <Button title={'upload request'} onPress={() => {
                     this.pickForUpload();
                 }}/>
-                <Text style={styles.welcome}>Example of request failure</Text>
-                <Button title={'error request'} onPress={() => navigation.push('rich', {theme: 'light'})}/>
-
+                <Text style={styles.welcome}>upload example with webview</Text>
+                <Button title={'upload request with webview'} onPress={() => navigation.push('rich', {theme: 'light'})}/>
 
                 <Text style={styles.message}>{this.state.message}</Text>
             </View>
