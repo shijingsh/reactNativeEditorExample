@@ -5,13 +5,16 @@
  * @format
  * @flow
  */
-
+import store from './store/store';
 import React, {Component} from 'react';
 import RichTextExample from './example';
 import Welcome from './welcome';
+import WelcomeContainer from './containers/WelcomeContainer';
+import {Provider} from 'react-redux';
 
 const Routes = {
     index: Welcome,
+    indexContainer:WelcomeContainer,
     rich: RichTextExample,
 };
 
@@ -34,7 +37,12 @@ class App extends Component<Props, State> {
         let that = this;
         let {routeKey, args = {}} = that.state;
         let Comp = Routes[routeKey];
-        return <Comp navigation={that} {...args} />;
+        return (
+            <Provider store = {store} >
+                <Comp navigation={that} {...args} />
+            </Provider>
+
+        );
     }
 }
 
