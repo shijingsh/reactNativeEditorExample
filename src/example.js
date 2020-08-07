@@ -8,6 +8,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Alert,
 } from 'react-native';
 import {RichEditor, RichToolbar} from 'react-native-editor';
 import ImagePicker from 'react-native-customized-image-picker';
@@ -33,26 +34,26 @@ export default class RichTextExample extends Component {
 
     pickForUpload = () => {
         let _this = this;
-
+        let url = 'https://www.xiushangsh.com/upload.json';
         ImagePicker.openPicker({
             isCamera: true,
             compressQuality: 90,
         }).then(images => {
-            _this.richText.appendContentHTML('<p>openPicker:' + JSON.stringify(images) + '</p>');
+            Alert.alert('pick success');
             if (images && images.length) {
                 let userImages = images.map(i => {
                     return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
                 });
                 if(userImages&&userImages.length>0){
                     Util.multiPost(url,userImages,[],function (bean) {
-                        _this.richText.appendContentHTML('<p>successCallback:' + JSON.stringify(uploadImages) + '</p>');
+                        _this.richText.insertHTML('<p>successCallback:' + JSON.stringify(bean) + '</p>');
                     },function (err) {
-                        _this.richText.appendContentHTML('<p>failCallback:' + JSON.stringify(error) + '</p>');
+                        _this.richText.insertHTML('<p>failCallback:' + JSON.stringify(err) + '</p>');
                     })
                 }
             }
         }).catch(e => {
-            _this.richText.appendContentHTML('<p>openPicker catch:' + JSON.stringify(e) + '</p>');
+            _this.richText.insertHTML('<p>openPicker catch:' + JSON.stringify(e) + '</p>');
         });
     };
 

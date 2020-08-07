@@ -32,10 +32,8 @@ export default class Welcome extends Component {
                 if(userImages&&userImages.length>0){
                     Util.multiPost(url,userImages,[],function (bean) {
                         _this.setState({message:JSON.stringify(bean)});
-                        Alert.alert('upload success');
                     },function (err) {
                         _this.setState({message:JSON.stringify(err)});
-                        Alert.alert('upload error');
                     })
                 }
             }
@@ -49,7 +47,7 @@ export default class Welcome extends Component {
         Util.get(url,function (data) {
             Alert.alert('loadData success');
         }, function (error) {
-            Alert.alert('loadData success');
+            Alert.alert('loadData error');
         })
     }
 
@@ -73,8 +71,6 @@ export default class Welcome extends Component {
                 <Button title={'upload request'} onPress={() => {
                     this.pickForUpload();
                 }}/>
-                <Text style={styles.welcome}>upload example with reduce</Text>
-                <Button title={'upload request with reduce'} onPress={() => navigation.push('indexContainer', {theme: 'light'})}/>
 
                 <Text style={styles.welcome}>upload example with webview</Text>
                 <Button title={'upload request with webview'} onPress={() => navigation.push('rich', {theme: 'light'})}/>
