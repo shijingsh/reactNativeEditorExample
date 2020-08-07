@@ -1,9 +1,3 @@
-/**
- *
- * @author tangzehua
- * @since 2019-06-24 15:07
- */
-
 import React, {Component} from 'react';
 import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import ImagePicker from 'react-native-customized-image-picker';
@@ -42,31 +36,11 @@ export default class Welcome extends Component {
         });
     };
 
-    loadData = () =>{
-        let url = 'https://www.xiushangsh.com/shop/listPage.json';
-        Util.get(url,function (data) {
-            Alert.alert('loadData success');
-        }, function (error) {
-            Alert.alert('loadData error');
-        })
-    }
-
-    onHome = () => {
-        let {navigation} = this.props;
-        navigation.push('index');
-    };
-
     render() {
         let {navigation} = this.props;
         return (
             <View style={styles.container}>
-                <Button title={'back home'} onPress={() => {
-                    this.onHome();
-                }}/>
-                <Text style={styles.welcome}>normal requests</Text>
-                <Button title={'normal request'} onPress={() => {
-                    this.loadData();
-                }}/>
+
                 <Text style={styles.welcome}>upload example</Text>
                 <Button title={'upload request'} onPress={() => {
                     this.pickForUpload();

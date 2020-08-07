@@ -15,11 +15,8 @@ import ImagePicker from 'react-native-customized-image-picker';
 import Util from './common/utils';
 
 const initHTML = `<br/>
-<center><b>Pell.js Rich Editor</b></center>
+<center><b>Rich Editor</b></center>
 <center>React Native</center>
-<br/>
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png" ></br></br>
-</br></br>
 `;
 
 export default class RichTextExample extends Component {
@@ -46,6 +43,15 @@ export default class RichTextExample extends Component {
                 });
                 if(userImages&&userImages.length>0){
                     Util.multiPost(url,userImages,function (bean) {
+                        let url = bean.data[0].relativePath;
+                        if(bean && bean.data){
+                            url = 'https://www.xiushangsh.com'+ bean.data[0].relativePath;
+                        }else{
+                            url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png';
+                        }
+                        _this.richText.insertImage(url);
+                        _this.richText.insertHTML('<p>url:' + url + '</p>');
+                        _this.richText.insertHTML("<br />");
                         _this.richText.insertHTML('<p>successCallback:' + JSON.stringify(bean) + '</p>');
                     },function (err) {
                         _this.richText.insertHTML('<p>failCallback:' + JSON.stringify(err) + '</p>');
