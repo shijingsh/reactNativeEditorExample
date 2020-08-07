@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {RichEditor, RichToolbar} from 'react-native-editor';
 import ImagePicker from 'react-native-customized-image-picker';
+import Util from './common/utils';
 
 const initHTML = `<br/>
 <center><b>Pell.js Rich Editor</b></center>
@@ -30,47 +31,6 @@ export default class RichTextExample extends Component {
         that.state = {theme: theme, contentStyle};
     }
 
-    multiPost = (file, successCallback, failCallback) => {
-        let obj = file[0]
-        let url = 'https://www.xiushangsh.com/upload.json';
-        let formData = new FormData();
-        if (!obj.type) {
-            obj.type = 'multipart/form-data';
-        }
-        if (!obj.name) {
-            let tmp = obj.uri;
-            if (tmp) {
-                let index = tmp.lastIndexOf('/');
-                if (index != -1) {
-                    obj.name = tmp.substr(index + 1);
-                }
-            } else {
-                obj.name = 'image0.jpg';
-            }
-        }
-        formData.append('images0', obj);
-
-        let fetchOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data',
-            },
-            body: formData,
-        };
-        this.richText.appendContentHTML('<p>obj:' + JSON.stringify(obj) + '</p>');
-        fetch(url, fetchOptions)
-            .then((response) => response.text())
-            .then((responseText) => {
-                let result = JSON.parse(responseText);
-                successCallback(result);
-            })
-            .catch((err) => {
-                console.log(err);
-                failCallback(err);
-            });
-    };
-
     pickForUpload = () => {
         let _this = this;
 
@@ -80,17 +40,16 @@ export default class RichTextExample extends Component {
         }).then(images => {
             _this.richText.appendContentHTML('<p>openPicker:' + JSON.stringify(images) + '</p>');
             if (images && images.length) {
-                let imageList = [];
-                imageList.push(images[0]);
-                _this.multiPost(imageList, function (uploadImages) {
-                    _this.richText.appendContentHTML('<p>successCallback:' + JSON.stringify(uploadImages) + '</p>');
-                    let imageList = ['https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png'];
-
-                    _this.richText.insertImage({src: imageList[0]});
-                    _this.richText.blurContentEditor();
-                }, function (error) {
-                    _this.richText.appendContentHTML('<p>failCallback:' + JSON.stringify(error) + '</p>');
+                let userImages = images.map(i => {
+                    return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
                 });
+                if(userImages&&userImages.length>0){
+                    Util.multiPost(url,userImages,[],function (bean) {
+                        _this.richText.appendContentHTML('<p>successCallback:' + JSON.stringify(uploadImages) + '</p>');
+                    },function (err) {
+                        _this.richText.appendContentHTML('<p>failCallback:' + JSON.stringify(error) + '</p>');
+                    })
+                }
             }
         }).catch(e => {
             _this.richText.appendContentHTML('<p>openPicker catch:' + JSON.stringify(e) + '</p>');

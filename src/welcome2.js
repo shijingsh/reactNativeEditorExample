@@ -1,9 +1,3 @@
-/**
- *
- * @author tangzehua
- * @since 2019-06-24 15:07
- */
-
 import React, {Component} from 'react';
 import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import ImagePicker from 'react-native-customized-image-picker';
@@ -16,6 +10,11 @@ export default class Welcome extends Component {
 
         this.state = {message:""}
     }
+
+    onHome = () => {
+        let {navigation} = this.props;
+        navigation.push('index');
+    };
 
     pickForUpload = () => {
         let _this = this;
@@ -31,9 +30,11 @@ export default class Welcome extends Component {
                 });
                 if(userImages&&userImages.length>0){
                     dispatch(uploadFile(userImages,function (uploadImages) {
-                        if(uploadImages&&uploadImages.length>0 ){
-
-                        }
+                        _this.setState({message:JSON.stringify(uploadImages)});
+                        Alert.alert('upload success');
+                    },function (err) {
+                        _this.setState({message:JSON.stringify(err)});
+                        Alert.alert('upload error');
                     }));
                 }
             }
@@ -42,32 +43,14 @@ export default class Welcome extends Component {
         });
     };
 
-    getJson =(url, successCallback, failCallback)=>{
-            fetch(url)
-                .then((response) => response.text())
-                .then((responseText) => {
-                    let result = JSON.parse(responseText);
-                    successCallback(result);
-                })
-                .catch((err) => {
-                    failCallback(err);
-                });
-    }
-
-    loadData = () =>{
-        let _this = this;
-        let url = 'https://www.xiushangsh.com/shop/listPage.json';
-        this.getJson(url,function (data) {
-            _this.setState({message:'load success' +JSON.stringify(data)});
-        }, function (error) {
-            _this.setState({message:'load error' +JSON.stringify(error)});
-        })
-    }
-
     render() {
         let {navigation} = this.props;
         return (
             <View style={styles.container}>
+                <Button title={'back home'} onPress={() => {
+                    this.onHome();
+                }}/>
+
                 <Text style={styles.welcome}>upload example</Text>
                 <Button title={'upload request'} onPress={() => {
                     this.pickForUpload();

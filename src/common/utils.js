@@ -1,15 +1,8 @@
-
 'use strict';
 
 import {Alert} from 'react-native';
 
 let Util = {
-    /**
-     * http get 请求简单封装
-     * @param url 请求的URL
-     * @param successCallback 请求成功回调
-     * @param failCallback 请求失败回调
-     */
     get: (url, successCallback, failCallback) => {
         fetch(url)
             .then((response) => response.text())
@@ -22,50 +15,6 @@ let Util = {
             });
     },
 
-    /**
-     * http post 请求简单封装
-     * @param url 请求的URL
-     * @param data post的数据
-     * @param successCallback 请求成功回调
-     * @param failCallback failCallback 请求失败回调
-     */
-    post: (url, data, successCallback, failCallback) => {
-/*        let formData = new FormData();
-        Object.keys(data).map(function(key) {
-            let value = data[key];
-            formData.append(key, value);
-        });*/
-
-        let fetchOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'multipart/form-data',
-            },
-            // body: formData
-            body: JSON.stringify(data)
-        };
-
-        fetch(url, fetchOptions)
-            .then((response) => response.text())
-            .then((responseText) => {
-                let result = JSON.parse(responseText);
-                successCallback(result);
-            })
-            .catch((err) => {
-                failCallback(err);
-            });
-    },
-
-    /**
-     * multi http post 请求简单封装
-     * @param url 请求的URL
-     * @param files 文件列表
-     * @param data post的数据 name/value 键值对
-     * @param successCallback 请求成功回调
-     * @param failCallback  请求失败回调
-     */
     multiPost: (url,files, data, successCallback, failCallback) => {
         let formData = new FormData();
         for(let i=0;files&&i<files.length;i++){

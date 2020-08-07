@@ -7,6 +7,7 @@
 import React, {Component} from 'react';
 import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import ImagePicker from 'react-native-customized-image-picker';
+import Util from "./common/utils";
 
 export default class Welcome extends Component {
 
@@ -16,96 +17,54 @@ export default class Welcome extends Component {
         this.state = {message:""}
     }
 
-    multiPost = (file, successCallback, failCallback) => {
-        let obj = file[0]
-        let url = 'https://www.xiushangsh.com/upload.json';
-        let formData = new FormData();
-        if (!obj.type) {
-            obj.type = 'multipart/form-data';
-        }
-        if (!obj.name) {
-            let tmp = obj.uri;
-            if (tmp) {
-                let index = tmp.lastIndexOf('/');
-                if (index != -1) {
-                    obj.name = tmp.substr(index + 1);
-                }
-            } else {
-                obj.name = 'image0.jpg';
-            }
-        }
-        this.setState({message:'obj' +JSON.stringify(obj)});
-        formData.append('images0', obj);
-
-        let fetchOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data',
-            },
-            body: formData,
-        };
-
-        fetch(url, fetchOptions)
-            .then((response) => response.text())
-            .then((responseText) => {
-                let result = JSON.parse(responseText);
-                successCallback(result);
-            })
-            .catch((err) => {
-                console.log(err);
-                failCallback(err);
-            });
-    };
-
     pickForUpload = () => {
         let _this = this;
-
+        let url = 'https://www.xiushangsh.com/upload.json';
         ImagePicker.openPicker({
             isCamera: true,
             compressQuality: 90,
         }).then(images => {
             Alert.alert('pick success');
             if (images && images.length) {
-                let imageList = [];
-                imageList.push(images[0]);
-                _this.multiPost(imageList, function (uploadImages) {
-                    Alert.alert('upload success');
-                }, function (error) {
-                    Alert.alert('upload error');
+                let userImages = images.map(i => {
+                    return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
                 });
+                if(userImages&&userImages.length>0){
+                    Util.multiPost(url,userImages,[],function (bean) {
+                        _this.setState({message:JSON.stringify(bean)});
+                        Alert.alert('upload success');
+                    },function (err) {
+                        _this.setState({message:JSON.stringify(err)});
+                        Alert.alert('upload error');
+                    })
+                }
             }
         }).catch(e => {
             _this.setState({message:'upload catch error' +JSON.stringify(e)});
         });
     };
 
-    getJson =(url, successCallback, failCallback)=>{
-            fetch(url)
-                .then((response) => response.text())
-                .then((responseText) => {
-                    let result = JSON.parse(responseText);
-                    successCallback(result);
-                })
-                .catch((err) => {
-                    failCallback(err);
-                });
-    }
-
     loadData = () =>{
-        let _this = this;
         let url = 'https://www.xiushangsh.com/shop/listPage.json';
-        this.getJson(url,function (data) {
+        Util.get(url,function (data) {
             Alert.alert('loadData success');
         }, function (error) {
             Alert.alert('loadData success');
         })
     }
 
+    onHome = () => {
+        let {navigation} = this.props;
+        navigation.push('index');
+    };
+
     render() {
         let {navigation} = this.props;
         return (
             <View style={styles.container}>
+                <Button title={'back home'} onPress={() => {
+                    this.onHome();
+                }}/>
                 <Text style={styles.welcome}>normal requests</Text>
                 <Button title={'normal request'} onPress={() => {
                     this.loadData();
